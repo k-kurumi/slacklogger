@@ -12,7 +12,12 @@ curl -XPUT 'localhost:9200/_template/slack_template2' -d '@slack.json'
 
 bundle install --path=vendor/bundle
 
+# 設定など
 export SLACK_TOKEN=(Slack Real Time Messaging APIのBotsトークン)
+export FLUENTD_HOST=localhost
+export FLUENTD_PORT=24224
+export FLUENTD_TAG=mysample1
+
 bundle exec ruby bin/logbot.rb
 ```
 
@@ -51,5 +56,4 @@ $ curl -s 'localhost:9200/slack-2015.06.16/_analyze?analyzer=kuromoji' -d 'も�
 
 ### TODO
 
-- [ ] config.ymlから設定の読み込み
-- [ ] テストを作る
+- [ ] テストの充実
