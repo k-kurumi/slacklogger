@@ -1,0 +1,19 @@
+{
+  "template": "slack-*",
+  "order": 1,
+  "mappings": {
+    "slack": {
+      "properties": {
+        "@timestamp": {"type": "date", "store": "yes", "format": "dateOptionalTime"},
+        "@log_name": {"type": "string", "store": "yes"},
+        "ts": {"type": "date", "store": "yes", "format": "dateOptionalTime"},
+        "user_id": {"type": "string", "store" : "yes"},
+        "user_name": {"type": "string", "store" : "yes"},
+        "channel_id": {"type": "string", "store" : "yes"},
+        "channel_name": {"type": "string", "store" : "yes"},
+        "channel_id": {"type": "string", "store" : "yes"},
+        "text": {"type": "string", "store" : "yes", "analyzer": "kuromoji"}
+      }
+    }
+  }
+}
