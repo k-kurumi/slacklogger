@@ -55,7 +55,8 @@ module SlackLogger
 
       when "message_changed"
         # URL貼付け後の要約など
-        post(for_url(data))
+        post_data = for_url(data)
+        post(post_data) if post_data
 
       when nil
         # ユーザ(hubot含む)の発言
@@ -108,8 +109,11 @@ module SlackLogger
     def for_url(data)
       # URL貼付け後の要約を整形する
       msg = data["message"]
-      at0 = data["message"]["attachments"][0]
 
+      # FIXME editedなどkeyが違うのは捨てているのを対応する
+      return nil unless msg.has_key?("attachments")
+
+      at0 = data["message"]["attachments"][0]
       ts = Time.at(msg["ts"].to_f).iso8601
 
       user_id   = msg["user"]
@@ -128,6 +132,9 @@ module SlackLogger
         channel_name: channel_name,
         text:         text,
       }
+    rescue Exception => e
+      @log.error e.message
+      return nil
     end
 
     def for_bot(data)
