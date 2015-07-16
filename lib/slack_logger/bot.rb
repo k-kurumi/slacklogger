@@ -107,13 +107,23 @@ module SlackLogger
     end
 
     def for_url(data)
-      # URL貼付け後の要約を整形する
+      # URLを貼った後の要約
       msg = data["message"]
 
-      # FIXME editedなどkeyが違うのは捨てているのを対応する
-      return nil unless msg.has_key?("attachments")
+      if msg.has_key?("attachments")
+        # URLを貼った後の要約
+        at0 = data["message"]["attachments"][0]
+        text = [at0["title"], at0["text"]].compact.join(" ")
 
-      at0 = data["message"]["attachments"][0]
+      elsif msg.has_key?("edited")
+        # 発言内容の修正
+        text = msg["text"]
+
+      else
+        # 他のフォーマットは対応しない
+        return nil
+      end
+
       ts = Time.at(msg["ts"].to_f).iso8601
 
       user_id   = msg["user"]
@@ -121,8 +131,6 @@ module SlackLogger
 
       channel_id   = data["channel"]
       channel_name = Channel.get_name(channel_id)
-
-      text = [at0["title"], at0["text"]].compact.join(" ")
 
       return {
         ts:           ts,
@@ -132,7 +140,8 @@ module SlackLogger
         channel_name: channel_name,
         text:         text,
       }
-    rescue Exception => e
+
+    rescue => e
       @log.error e.message
       return nil
     end
